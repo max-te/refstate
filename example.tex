@@ -1,0 +1,42 @@
+\documentclass{scrartcl}
+\usepackage[british]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{amsthm}
+\usepackage{refstate}
+
+\usepackage{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{THM}{Theorem}[section]
+
+
+\begin{document}
+
+This is a document to demonstrate refstate.
+
+\section{Introduction}
+
+Here we pre-state a theorem. Note the reference to the location of the proper theorem.
+
+\refstate{thmmain}
+
+\newpage
+
+\section{The theorem}
+
+\begin{store}{THM}\label{thmmain}
+    The sky is blue.
+\end{store}
+\begin{proof}
+    Trivial.
+\end{proof}
+
+\section{Conclusion}
+
+We can also re-state the theorem after the fact:
+
+\refstate{thmmain}
+
+\end{document}
