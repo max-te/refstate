@@ -1,0 +1,15 @@
+build
+*.pdf
+*.aux
+*.dvi
+*.fdb_latexmk
+*.fls
+*.glo
+*.hd
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.zip
+*.synctex.gz
