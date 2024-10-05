@@ -1,5 +1,4 @@
 build
-*.pdf
 *.aux
 *.dvi
 *.fdb_latexmk
