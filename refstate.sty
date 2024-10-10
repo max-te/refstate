@@ -1,4 +1,12 @@
-% refstate.sty
+%%
+%% This is file `refstate.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% refstate.dtx  (with options: `package')
+%% 
+%% File: refstate.dtx
 %% Copyright (C) 2021--2024 by Maximilian Teegen
 %%
 %% This file may be distributed and/or modified under the
@@ -10,75 +18,71 @@
 %%
 %% and version 1.3 or later is part of all distributions of
 %% LaTeX version 2005/12/01 or later.
-%
-% This package is a hack that relies on amsthm implementation details.
-% It may break at any time.
-
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{refstate}
+    [2024/10/10 v0.2 ]
 \ProvidesPackage{refstate}
 \RequirePackage{amsthm,xparse}
 \RequirePackage{marginnote}
-
 \ExplSyntaxOn
-
 \let\rfst@newtheorem@original=\newtheorem
 \RenewDocumentCommand{\newtheorem}{s m o m o}{
-    \tl_if_in:nnTF {#2} {phfthm@} {
-        \tl_set:Nx \l_tmpa_tl
-            {\tl_range:nnn{#2}{8}{-1}}
-        \cs_if_exist:NTF \cmdKV@phfmkthm@thmstyle {
-            \if\relax\detokenize\expandafter{\cmdKV@phfmkthm@thmstyle}\relax % ... why?
-                \tl_const:cx {rfst@style@\tl_use:N\l_tmpa_tl} {\the\thm@style}
-            \else
-                \tl_const:cx {rfst@style@\tl_use:N\l_tmpa_tl} {\cmdKV@phfmkthm@thmstyle}
-            \fi
-        }{
-            \tl_const:cx {rfst@style@\tl_use:N\l_tmpa_tl} {\the\thm@style}
-        }
-        \tl_const:cx {rfst@style@#2} {plain}
-
-        \tl_const:cx {rfst@name@\tl_use:N\l_tmpa_tl}
-            {#4}
+  \tl_if_in:nnTF {#2} {phfthm@} {
+    \tl_set:Nx \l_tmpa_tl
+      {\tl_range:nnn{#2}{8}{-1}}
+    \cs_if_exist:NTF \cmdKV@phfmkthm@thmstyle {
+      \if\relax\detokenize\expandafter{\cmdKV@phfmkthm@thmstyle}\relax % ... why?
+        \tl_const:cx {rfst@style@\tl_use:N\l_tmpa_tl} {\the\thm@style}
+      \else
+        \tl_const:cx {rfst@style@\tl_use:N\l_tmpa_tl} {\cmdKV@phfmkthm@thmstyle}
+      \fi
     }{
-        \tl_const:cx {rfst@style@#2} {\the\thm@style}
-        \tl_const:cx {rfst@name@#2} {#4}
+      \tl_const:cx {rfst@style@\tl_use:N\l_tmpa_tl} {\the\thm@style}
     }
-
-    \IfBooleanTF{#1}{
-        \IfValueTF{#3}{
-            \IfValueTF{#5}{
-                \rfst@newtheorem@original*{#2}[#3]{#4}[#5]
-            }{
-                \rfst@newtheorem@original*{#2}[#3]{#4}
-            }
-        }{
-            \IfValueTF{#5}{
-                \rfst@newtheorem@original*{#2}{#4}[#5]
-            }{
-                \rfst@newtheorem@original*{#2}{#4}
-            }
-        }
+    \tl_const:cx {rfst@style@#2} {plain}
+    \tl_const:cx {rfst@name@\tl_use:N\l_tmpa_tl}
+      {#4}
+  }{
+    \tl_const:cx {rfst@style@#2} {\the\thm@style}
+    \tl_const:cx {rfst@name@#2} {#4}
+  }
+  \IfBooleanTF{#1}{
+    \IfValueTF{#3}{
+      \IfValueTF{#5}{
+        \rfst@newtheorem@original*{#2}[#3]{#4}[#5]
+      }{
+        \rfst@newtheorem@original*{#2}[#3]{#4}
+      }
     }{
-        \IfValueTF{#3}{
-            \IfValueTF{#5}{
-                \rfst@newtheorem@original{#2}[#3]{#4}[#5]
-            }{
-                \rfst@newtheorem@original{#2}[#3]{#4}
-            }
-        }{
-            \IfValueTF{#5}{
-                \rfst@newtheorem@original{#2}{#4}[#5]
-            }{
-                \rfst@newtheorem@original{#2}{#4}
-            }
-        }
+      \IfValueTF{#5}{
+        \rfst@newtheorem@original*{#2}{#4}[#5]
+      }{
+        \rfst@newtheorem@original*{#2}{#4}
+      }
     }
+  }{
+    \IfValueTF{#3}{
+      \IfValueTF{#5}{
+        \rfst@newtheorem@original{#2}[#3]{#4}[#5]
+      }{
+        \rfst@newtheorem@original{#2}[#3]{#4}
+      }
+    }{
+      \IfValueTF{#5}{
+        \rfst@newtheorem@original{#2}{#4}[#5]
+      }{
+        \rfst@newtheorem@original{#2}{#4}
+      }
+    }
+  }
 }
-
 \NewExpandableDocumentCommand{\rfst@gobble@label}{o m}{}
-
-\NewDocumentCommand{\rfst@faketheorem}{m m m m +m O{}}{% 1=Label 2=Style 3=Type 4=TypeName 5=Body 6=Head
+\NewDocumentCommand{\rfst@faketheorem}{m m m m +m O{}}{
+   % 1=Label 2=Style 3=Type 4=TypeName 5=Body 6=Head
    \begingroup
-   \let\label\rfst@gobble@label % \let\index\@gobble \let\glossary\@gobble % Not all of these may be desirable...
+   \let\label\rfst@gobble@label
+   % \let\index\@gobble \let\glossary\@gobble
+   % Not all of these may be desirable...
    \ifhmode\unskip\unskip\par\fi
    \normalfont
    \trivlist
@@ -89,8 +93,8 @@
    \thm@headsep 5\p@ plus\p@ minus\p@\relax
    \thm@space@setup
    \csname th@#2\endcsname
-   \@topsep \thm@preskip               % used by thm head
-   \@topsepadd \thm@postskip           % used by \@endparenv
+   \@topsep \thm@preskip         % used by thm head
+   \@topsepadd \thm@postskip       % used by \@endparenv
    \@begintheorem{#4}{\ref{#1}}[#6]
    \marginnote{\textit{\footnotesize$\leadsto$\,p.\,\pageref*{#1}}}
    \ignorespaces
@@ -98,59 +102,44 @@
    \@endtheorem
    \endgroup
 }
-
 \newcommand{\refstate}[1]{%
-    \ifcsname rfst@storedthm@#1\endcsname
-        \@nameuse{rfst@storedthm@#1}
-    \else
-        % We need an other run of latex. Put a placeholder.
-        \ifhmode\unskip\unskip\par\fi
-        \thm@space@setup
-        \vskip\thm@preskip
-        \noindent
-        \textbf{Restate}~\texttt{\detokenize{#1}}
-        \par
-        \vskip\thm@postskip
-    \fi
+  \ifcsname rfst@storedthm@#1\endcsname
+    \@nameuse{rfst@storedthm@#1}
+  \else
+    \ifhmode\unskip\unskip\par\fi
+    \thm@space@setup
+    \vskip\thm@preskip
+    \noindent
+    \textbf{Restate}~\texttt{\detokenize{#1}}
+    \par
+    \vskip\thm@postskip
+  \fi
 }
-
 \NewExpandableDocumentCommand{\rfst@thm@detok}{o m m m}{
-    \detokenize{{#2}{#3}{#4}}
+  \detokenize{{#2}{#3}{#4}}
 }
-
 \NewDocumentEnvironment{store}{ m o +b } {%
-    \IfValueTF{#2}{\begin{#1}[#2]}{\begin{#1}} % Begin wrapped theorem
-        % Capture the first label.
-        \newtoks\rfst@labelval
-        \let\rfst@oldlabel\label
-        \newcommand{\rfst@label}[1]{\rfst@labelval{##1}\let\label\rfst@oldlabel\label{##1}}
-        \let\label\rfst@label
-        % Display the actual theorem contents
-        #3
-        % Store all the info needed to refstate the theorem
-        \begingroup
-            % \@thm receives the theorem styling and the theorem name. Capture them:
-            \let\@thm=\rfst@thm@detok
-            % This changes the bahviour of thmt@original@#1 to give us the arguments we need.
-
-            % \ifcsname thmt@original@#1\endcsname
-            \protected@write\@auxout{}{%
-                \string\global\string\long\string\@namedef{rfst@storedthm@\the\rfst@labelval}{%
-                    \string\rfst@faketheorem%
-                    {\the\rfst@labelval}%
-                    % \csname thmt@original@#1\endcsname%
-                    {\tl_use:c{rfst@style@#1}}{#1}{\tl_use:c{rfst@name@#1}}
-                    {\detokenize{#3}}%
-                    \IfValueT{#2}{[#2]}%
-                }
-            }
-            % \else
-            %     \@latex@error{Environment #1 can not be ref-stated, there is no thmt@original@#1}
-            % \fi
-        \endgroup
-    \end{#1} % End wrapped theorem
+  \IfValueTF{#2}{\begin{#1}[#2]}{\begin{#1}} % Begin wrapped theorem
+    \newtoks\rfst@labelval % Capture the first label.
+    \let\rfst@oldlabel\label
+    \newcommand{\rfst@label}[1]{\rfst@labelval{##1}\let\label\rfst@oldlabel\label{##1}}
+    \let\label\rfst@label
+    #3 % Display the actual theorem contents
+    \begingroup
+      \let\@thm=\rfst@thm@detok
+      \protected@write\@auxout{}{%
+        \string\global\string\long\string\@namedef{rfst@storedthm@\the\rfst@labelval}{%
+          \string\rfst@faketheorem%
+          {\the\rfst@labelval}%
+          {\tl_use:c{rfst@style@#1}}{#1}{\tl_use:c{rfst@name@#1}}
+          {\detokenize{#3}}%
+          \IfValueT{#2}{[#2]}%
+        }
+      }
+    \endgroup
+  \end{#1} % End wrapped theorem
 } {}
 
-
-
-
+\endinput
+%%
+%% End of file `refstate.sty'.
